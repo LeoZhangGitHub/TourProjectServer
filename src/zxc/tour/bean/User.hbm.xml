@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+
+
+<hibernate-mapping package="zxc.tour.bean">
+    <class name="zxc.tour.bean.User" table="user">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="name" type="java.lang.String" column="name"/>
+    </class>
+</hibernate-mapping>
