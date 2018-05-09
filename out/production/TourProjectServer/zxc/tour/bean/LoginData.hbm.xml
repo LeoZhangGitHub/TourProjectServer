@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+
+
+<hibernate-mapping package="zxc.tour.bean">
+    <class name="zxc.tour.bean.LoginData" table="logindata">
+        <id name="name" type="java.lang.String" column="name"/>
+        <property name="password" type="java.lang.String" column="password"/>
+    </class>
+</hibernate-mapping>

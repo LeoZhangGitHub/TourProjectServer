@@ -16,6 +16,7 @@
 
         <!--导入映射文件-->
         <mapping resource="zxc/tour/bean/User.hbm.xml"/>
+        <mapping resource="zxc/tour/bean/LoginData.hbm.xml"/>
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
     </session-factory>

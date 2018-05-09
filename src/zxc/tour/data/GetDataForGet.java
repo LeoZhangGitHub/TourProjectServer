@@ -1,6 +1,15 @@
 package zxc.tour.data;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import zxc.tour.DBhandle.SaveDataToDB;
+import zxc.tour.bean.App;
+import zxc.tour.bean.LoginData;
+
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,13 +34,25 @@ public class GetDataForGet extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        //获取请求的参数（使用utf-8进行解码，然后用进行ISO8859-1编码）
-//      String name=new String(request.getParameter("name").getBytes("ISO8859-1"),"utf-8");
-        String name=request.getParameter("name");
-        String pwd=request.getParameter("pwd");
-        System.out.println("name:"+name+"   pwd:"+pwd);
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        String name = request.getParameter("name");
+        String psd = request.getParameter("pwd");
+        //test(name);
+
+        try {
+            /*SaveDataToDB.getInstance().save(name, psd);*/
+
+            System.out.println("**"+name);
+            System.out.println("***"+psd);
+            SaveDataToDB.getInstance().isUser(name,psd);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

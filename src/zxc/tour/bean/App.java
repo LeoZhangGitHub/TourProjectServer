@@ -8,6 +8,8 @@ import org.hibernate.cfg.Configuration;
 public class App {
 
     private static SessionFactory sessionFactory;
+    private static String name;
+    private static String psd;
 
     static {
         Configuration cfg = new Configuration();
@@ -15,7 +17,20 @@ public class App {
         sessionFactory = cfg.buildSessionFactory();
     }
 
-    public void testSave() throws Exception {
+    public App(String name,String password){
+        this.name = name;
+        this.psd = password;
+
+        try {
+            testSave(name, psd);
+
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    public void testSave(String name,String psd) throws Exception {
         User user = new User();
         user.setName("zasan");
 
@@ -35,13 +50,14 @@ public class App {
     }
 
     public static void main(String[] args) {
-        App app = new App();
+        App app = new App(name,psd);
         try {
-            app.testSave();
+            app.testSave(name,psd);
             app.testGet();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }
+
+
