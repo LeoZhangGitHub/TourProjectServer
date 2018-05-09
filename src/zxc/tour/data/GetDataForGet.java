@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import zxc.tour.DBhandle.SaveDataToDB;
+import zxc.tour.DBhandle.SelectDB;
 import zxc.tour.bean.App;
 import zxc.tour.bean.LoginData;
 
@@ -37,22 +38,6 @@ public class GetDataForGet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-        String name = request.getParameter("name");
-        String psd = request.getParameter("pwd");
-        //test(name);
-
-        try {
-            /*SaveDataToDB.getInstance().save(name, psd);*/
-
-            System.out.println("**"+name);
-            System.out.println("***"+psd);
-            SaveDataToDB.getInstance().isUser(name,psd);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -61,6 +46,26 @@ public class GetDataForGet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
+
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        String name = request.getParameter("name");
+        String psd = request.getParameter("pwd");
+
+
+        try {
+            /*SaveDataToDB.getInstance().save(name, psd);*/
+            if (SelectDB.getInstance().isUser(name, psd)) {
+                out.print("1");
+            } else {
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 }

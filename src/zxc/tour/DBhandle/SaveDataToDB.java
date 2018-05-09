@@ -44,29 +44,6 @@ public class SaveDataToDB {
         session.close();  //关闭session，释放资源
     }
 
-    public void isUser(String name,String pass) throws Exception {
-        Session session = sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
 
-        try {
-            System.out.println("***"+name);
-            System.out.println("***"+pass);
-            LoginData loginData = (LoginData) session.get(LoginData.class, name);
-
-            System.out.println(loginData.getPassword());
-
-
-        } catch (Exception e) {
-        }/*finally {
-            try {
-                LoginData loginData = (LoginData) session.get(LoginData.class, pass);
-            } catch (Exception e) {
-                return false;
-            }
-        }*/
-        tx.commit();
-        session.close();
-
-    }
 
 }
