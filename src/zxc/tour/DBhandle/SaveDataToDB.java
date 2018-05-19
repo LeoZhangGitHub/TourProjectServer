@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import sun.rmi.runtime.Log;
+import zxc.tour.bean.ArticleBean;
 import zxc.tour.bean.LoginData;
 
 public class SaveDataToDB {
@@ -25,20 +26,20 @@ public class SaveDataToDB {
 
     }
 
-    public void save(String name,String psd) throws Exception {
+    public void saveToArticle(String title,String content,String id) throws Exception {
 
         Configuration cfg = new Configuration();
         cfg.configure("source/Hibernate.cfg.xml");
         sessionFactory = cfg.buildSessionFactory();
-        LoginData loginData = new LoginData();
-        loginData.setName(name);
-        loginData.setPassword(psd);
-        System.out.println("Sdfsdfa");
+        ArticleBean articleBean = new ArticleBean();
+        articleBean.setArticleTitle(title);
+        articleBean.setArticleContent(content);
+        articleBean.setId(id);
 
         Session session = sessionFactory.openSession();  //打开一个新的session
         Transaction tx = session.beginTransaction();  //开始事务
 
-        session.save(loginData);
+        session.save(articleBean);
 
         tx.commit();  //提交事务
         session.close();  //关闭session，释放资源

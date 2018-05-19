@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+
+
+<hibernate-mapping package="zxc.tour.bean">
+    <class name="zxc.tour.bean.ArticleBean" table="article">
+        <id name="articleTitle" type="java.lang.String" column="title"/>
+        <property name="articleContent" type="java.lang.String" column="content"/>
+        <property name="id" type="java.lang.String" column="id"/>
+    </class>
+</hibernate-mapping>

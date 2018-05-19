@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+
+
+<hibernate-mapping package="zxc.tour.bean">
+    <class name="zxc.tour.bean.PhoneNumber" table="number">
+        <id name="id" type="java.lang.String" column="id"/>
+        <property name="phonenumber" type="java.lang.String" column="phonenumber"/>
+    </class>
+</hibernate-mapping>

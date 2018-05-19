@@ -1,5 +1,10 @@
 package zxc.tour.data;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import zxc.tour.DBhandle.SaveDataToDB;
+import zxc.tour.DBhandle.SelectDB;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,9 +17,11 @@ public class GetDataForSocket {
     //定义相关的参数,端口,存储Socket连接的集合,ServerSocket对象
     //以及线程池
     private static final int PORT = 12345;
-    private List<Socket> mList = new ArrayList<>();
+    private List<Socket> mList = new ArrayList<Socket>();
     private ServerSocket server = null;
     private ExecutorService myExecutorService = null;
+
+    private String id;
 
 
     public static void main(String[] args) {
@@ -46,15 +53,17 @@ public class GetDataForSocket {
         private BufferedReader in = null;
         private String msg = "";
 
+
         public Service(Socket socket) {
             this.socket = socket;
             try
             {
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                msg = "用户:" +this.socket.getInetAddress() + "~加入了聊天室"
-                        +"当前在线人数:" +mList.size();
+                msg = "用户:" +this.socket.getInetAddress() + "~登入系统";
                 this.sendmsg();
-            }catch(IOException e){e.printStackTrace();}
+            }catch(IOException e){
+                e.printStackTrace();
+            }
         }
 
 
@@ -66,29 +75,59 @@ public class GetDataForSocket {
                 {
                     if((msg = in.readLine()) != null)
                     {
-                        if(msg.equals("bye"))
+
+                        JSONObject jsonObject = new JSONObject(msg);
+                        String doWhat = jsonObject.get("doWhat").toString();
+                        if(doWhat.equals("bye"))
                         {
+                            /*客户端断开网络*/
                             System.out.println("~~~~~~~~~~~~~");
                             mList.remove(socket);
                             in.close();
-                            msg = "用户:" + socket.getInetAddress()
-                                    + "退出:" +"当前在线人数:"+mList.size();
                             socket.close();
                             this.sendmsg();
                             break;
-                        }else{
-                            msg = socket.getInetAddress() + "   说: " + msg;
+                        } else if (doWhat.equals("username")) {
+                            //获取到username
+                            String username = jsonObject.get("username").toString();
+                            //从数据库查找到id
+                            String id = SelectDB.getInstance().getUserId(username);
+
+                            System.out.println(id);
+                            setUserID(id);
+
+                        } else if (doWhat.equals("site")) {
+                           /* //根据用户名查找用户ID，根据用户ID查找电话号码
+                            msg = SelectDB.getInstance().getUserId(msg);
+                            msg = SelectDB.getInstance().getUserPhoneNumber(msg);*/
+
+                           /* in.close();
+                            socket.close();*/
+                            System.out.println(msg);
+                            System.out.println(jsonObject.get("name"));
                             this.sendmsg();
+                        } else if (doWhat.equals("article")) {
+                            //获取article中的主要内容
+                            String article = jsonObject.get("Title").toString();
+                            String content = jsonObject.get("Content").toString();
+
+                            System.out.println("***"+id);
+
+                            //存储article到数据库
+                            SaveDataToDB.getInstance().saveToArticle(article,content,id);
                         }
                     }
                 }
-            }catch(Exception e){e.printStackTrace();}
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
+
+
 
         //为连接上服务端的每个客户端发送信息
         public void sendmsg()
         {
-            System.out.println(msg);
             int num = mList.size();
             for(int index = 0;index < num;index++)
             {
@@ -98,9 +137,14 @@ public class GetDataForSocket {
                     pout = new PrintWriter(new BufferedWriter(
                             new OutputStreamWriter(mSocket.getOutputStream(),"UTF-8")),true);
                     pout.println(msg);
-                }catch (IOException e) {e.printStackTrace();}
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
+    }
+    public void setUserID(String ID) {
+        this.id = ID;
     }
 }

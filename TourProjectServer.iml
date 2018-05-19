@@ -38,5 +38,6 @@
         <jarDirectory url="file://$MODULE_DIR$/../tourServerProject/lib" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="org.json:json:20140107" level="project" />
   </component>
 </module>
