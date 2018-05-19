@@ -59,7 +59,16 @@ public class GetDataForSocket {
             try
             {
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                msg = "用户:" +this.socket.getInetAddress() + "~登入系统";
+                msg = in.readLine();
+                System.out.println(msg);
+                JSONObject jsonObject = new JSONObject(msg);
+                String doWhat = jsonObject.get("doWhat").toString();
+                if (doWhat.equals("getbrowse")) {
+                    this.sendArticleToClient("201801");
+                } else {
+                    msg = "用户:" +this.socket.getInetAddress() + "~登入系统";
+                }
+
                 this.sendmsg();
             }catch(IOException e){
                 e.printStackTrace();
@@ -80,7 +89,7 @@ public class GetDataForSocket {
                         String doWhat = jsonObject.get("doWhat").toString();
                         if(doWhat.equals("bye"))
                         {
-                            /*客户端断开网络*/
+                            //客户端断开网络
                             System.out.println("~~~~~~~~~~~~~");
                             mList.remove(socket);
                             in.close();
@@ -97,12 +106,12 @@ public class GetDataForSocket {
                             setUserID(id);
 
                         } else if (doWhat.equals("site")) {
-                           /* //根据用户名查找用户ID，根据用户ID查找电话号码
+                            //根据用户名查找用户ID，根据用户ID查找电话号码
                             msg = SelectDB.getInstance().getUserId(msg);
-                            msg = SelectDB.getInstance().getUserPhoneNumber(msg);*/
+                            msg = SelectDB.getInstance().getUserPhoneNumber(msg);
 
-                           /* in.close();
-                            socket.close();*/
+                            in.close();
+                            socket.close();
                             System.out.println(msg);
                             System.out.println(jsonObject.get("name"));
                             this.sendmsg();
@@ -111,10 +120,11 @@ public class GetDataForSocket {
                             String article = jsonObject.get("Title").toString();
                             String content = jsonObject.get("Content").toString();
 
-                            System.out.println("***"+id);
 
                             //存储article到数据库
                             SaveDataToDB.getInstance().saveToArticle(article,content,id);
+                        } else if (doWhat.equals("getbrowse")) {
+                            this.sendArticleToClient(id);
                         }
                     }
                 }
@@ -143,7 +153,26 @@ public class GetDataForSocket {
             }
         }
 
+        public void sendArticleToClient(String id){
+
+            PrintWriter pout = null;
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("article", SelectDB.getInstance().getArticleTilte(id));
+            jsonObject.put("content", SelectDB.getInstance().getArticleContent(id));
+            jsonObject.put("id", id);
+            String result = jsonObject.toString();
+
+            try {
+                pout = new PrintWriter(new BufferedWriter(
+                        new OutputStreamWriter(socket.getOutputStream(),"UTF-8")),true);
+                pout.println(result);
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
+
     public void setUserID(String ID) {
         this.id = ID;
     }

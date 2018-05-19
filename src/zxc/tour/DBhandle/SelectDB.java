@@ -4,13 +4,18 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import zxc.tour.bean.ArticleBean;
 import zxc.tour.bean.LoginData;
 import zxc.tour.bean.PhoneNumber;
 
 public class SelectDB {
-    private SessionFactory sessionFactory;
+    private static SessionFactory sessionFactory;
 
     public static SelectDB instance;
+
+    private static Session session;
+
+    private static Transaction tx;
 
     public static SelectDB getInstance(){
 
@@ -23,14 +28,15 @@ public class SelectDB {
         return instance;
 
     }
-    public boolean isUser(String name,String pass) throws Exception {
-
+    static {
         Configuration cfg = new Configuration();
         cfg.configure("source/Hibernate.cfg.xml");
         sessionFactory = cfg.buildSessionFactory();
 
-        Session session = sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
+        session = sessionFactory.openSession();
+        tx = session.beginTransaction();
+    }
+    public boolean isUser(String name,String pass) throws Exception {
 
         try {
 
@@ -53,13 +59,6 @@ public class SelectDB {
 
     public String getUserId(String name) {
 
-        Configuration cfg = new Configuration();
-        cfg.configure("source/Hibernate.cfg.xml");
-        sessionFactory = cfg.buildSessionFactory();
-
-        Session session = sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-
         LoginData loginData = (LoginData) session.get(LoginData.class, name);
 
         tx.commit();
@@ -71,13 +70,6 @@ public class SelectDB {
 
     public String getUserPhoneNumber(String id) {
 
-        Configuration cfg = new Configuration();
-        cfg.configure("source/Hibernate.cfg.xml");
-        sessionFactory = cfg.buildSessionFactory();
-
-        Session session = sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-
         PhoneNumber phoneNumber = (PhoneNumber) session.get(PhoneNumber.class, id);
 
         tx.commit();
@@ -85,5 +77,23 @@ public class SelectDB {
 
         return phoneNumber.getPhonenumber().toString();
 
+    }
+
+    public String getArticleTilte(String id) {
+
+        ArticleBean articleBean = (ArticleBean) session.get(ArticleBean.class, id);
+
+       /* tx.commit();
+        session.close();*/
+
+        return articleBean.getArticleTitle().toString();
+    }
+    public String getArticleContent(String id) {
+        ArticleBean articleBean = (ArticleBean) session.get(ArticleBean.class, id);
+
+        tx.commit();
+        session.close();
+
+        return articleBean.getArticleContent().toString();
     }
 }
