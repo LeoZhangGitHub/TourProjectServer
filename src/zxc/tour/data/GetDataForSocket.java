@@ -65,8 +65,38 @@ public class GetDataForSocket {
                 String doWhat = jsonObject.get("doWhat").toString();
                 if (doWhat.equals("getbrowse")) {
                     this.sendArticleToClient("201801");
+                } else if (doWhat.equals("article")) {
+                    //获取article中的主要内容
+                    String article = jsonObject.get("Title").toString();
+                    String content = jsonObject.get("Content").toString();
+                    //存储article到数据库
+                    try {
+                        SaveDataToDB.getInstance().saveToArticle(article,content,id);
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                } else if (doWhat.equals("reserve")) {
+                    //获取reserve中的主要内容
+                    String begin = jsonObject.get("begin").toString();
+                    String stop = jsonObject.get("stop").toString();
+                    try {
+
+                        SaveDataToDB.getInstance().saveToReserve(begin, stop, id);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else if (doWhat.equals("siteorder")) {
+                    System.out.println(jsonObject);
+                    try {
+                        SaveDataToDB.getInstance().saveToSiteOrder(jsonObject.get("projectname").toString(), jsonObject.get("price").toString(), id);
+
+
+                    } catch (Exception e) {
+                    }
+
                 } else {
-                    msg = "用户:" +this.socket.getInetAddress() + "~登入系统";
+                    msg = "用户:" + this.socket.getInetAddress() + "~登入系统";
                 }
 
                 this.sendmsg();
@@ -107,20 +137,19 @@ public class GetDataForSocket {
 
                         } else if (doWhat.equals("site")) {
                             //根据用户名查找用户ID，根据用户ID查找电话号码
-                            msg = SelectDB.getInstance().getUserId(msg);
-                            msg = SelectDB.getInstance().getUserPhoneNumber(msg);
+                           /* msg = SelectDB.getInstance().getUserId(jsonObject.get("name").toString());
+                            msg = SelectDB.getInstance().getUserPhoneNumber(msg);*/
 
                             in.close();
                             socket.close();
                             System.out.println(msg);
-                            System.out.println(jsonObject.get("name"));
-                            this.sendmsg();
+                            /*System.out.println(jsonObject.get("name"));*/
+                           // this.sendmsg();
+                            this.sendToHandle();
                         } else if (doWhat.equals("article")) {
                             //获取article中的主要内容
                             String article = jsonObject.get("Title").toString();
                             String content = jsonObject.get("Content").toString();
-
-
                             //存储article到数据库
                             SaveDataToDB.getInstance().saveToArticle(article,content,id);
                         } else if (doWhat.equals("getbrowse")) {
@@ -166,6 +195,25 @@ public class GetDataForSocket {
                 pout = new PrintWriter(new BufferedWriter(
                         new OutputStreamWriter(socket.getOutputStream(),"UTF-8")),true);
                 pout.println(result);
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        public void sendToHandle(){
+            System.out.println("sdf");
+
+            PrintWriter pout = null;
+            /*JSONObject jsonObject = new JSONObject();
+            jsonObject.put("article", SelectDB.getInstance().getArticleTilte(id));
+            jsonObject.put("content", SelectDB.getInstance().getArticleContent(id));
+            jsonObject.put("id", id);
+            String result = jsonObject.toString();*/
+
+            try {
+                pout = new PrintWriter(new BufferedWriter(
+                        new OutputStreamWriter(socket.getOutputStream(),"UTF-8")),true);
+                pout.println("zhangsfosdf");
+                System.out.println("发送成功");
             }catch (IOException e) {
                 e.printStackTrace();
             }

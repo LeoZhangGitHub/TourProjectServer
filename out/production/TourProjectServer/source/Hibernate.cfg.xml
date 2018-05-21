@@ -19,6 +19,8 @@
         <mapping resource="zxc/tour/bean/LoginData.hbm.xml"/>
         <mapping resource="zxc/tour/bean/PhoneNumber.hbm.xml"/>
         <mapping resource="zxc/tour/bean/ArticleBean.hbm.xml"/>
+        <mapping resource="zxc/tour/bean/SiteOrder.hbm.xml"/>
+
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
     </session-factory>
