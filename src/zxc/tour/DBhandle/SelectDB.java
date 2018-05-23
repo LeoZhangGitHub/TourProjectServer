@@ -7,6 +7,7 @@ import org.hibernate.cfg.Configuration;
 import zxc.tour.bean.ArticleBean;
 import zxc.tour.bean.LoginData;
 import zxc.tour.bean.PhoneNumber;
+import zxc.tour.bean.SiteOrder;
 
 public class SelectDB {
     private static SessionFactory sessionFactory;
@@ -79,6 +80,17 @@ public class SelectDB {
 
     }
 
+    public String getUserOrderProjectName(String id) {
+        SiteOrder siteOrder = (SiteOrder) session.get(SiteOrder.class, id);
+
+        return siteOrder.getProjectName().toString();
+    }
+    public String getUserOrderPrice(String id) {
+        SiteOrder siteOrder = (SiteOrder) session.get(SiteOrder.class, id);
+
+        return siteOrder.getPrice().toString();
+    }
+
     public String getArticleTilte(String id) {
 
         ArticleBean articleBean = (ArticleBean) session.get(ArticleBean.class, id);
@@ -91,8 +103,8 @@ public class SelectDB {
     public String getArticleContent(String id) {
         ArticleBean articleBean = (ArticleBean) session.get(ArticleBean.class, id);
 
-        tx.commit();
-        session.close();
+      /*  tx.commit();
+        session.close();*/
 
         return articleBean.getArticleContent().toString();
     }

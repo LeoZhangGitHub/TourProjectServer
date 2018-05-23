@@ -91,9 +91,13 @@ public class GetDataForSocket {
                     try {
                         SaveDataToDB.getInstance().saveToSiteOrder(jsonObject.get("projectname").toString(), jsonObject.get("price").toString(), id);
 
-
                     } catch (Exception e) {
+                        e.printStackTrace();
                     }
+
+                } else if (doWhat.equals("getMyOrder")) {
+
+                    this.sendUserOrder("201801");
 
                 } else {
                     msg = "用户:" + this.socket.getInetAddress() + "~登入系统";
@@ -179,6 +183,27 @@ public class GetDataForSocket {
                 }catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+
+        public void sendUserOrder(String id) {
+
+            PrintWriter pout = null;
+
+            String projectName = SelectDB.getInstance().getUserOrderProjectName(id);
+            String price = SelectDB.getInstance().getUserOrderPrice(id);
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("projectname", projectName);
+            jsonObject.put("price", price);
+
+            String result = jsonObject.toString();
+            try {
+                pout = new PrintWriter(new BufferedWriter(
+                        new OutputStreamWriter(socket.getOutputStream(),"UTF-8")),true);
+                pout.println(result);
+            }catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
